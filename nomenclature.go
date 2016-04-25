@@ -13,10 +13,10 @@ func main() {
 
 	log.Printf("Starting server")
 	
-	pre := make([]string, 0)
-	pst := make([]string, 0)
+	pre := []string{"Big", "Bad", "Horrible"}
+	pst := []string{"Wolf", "Chicken", "Hernia"}
 
-	a := generator.NewStandardGenerator(&pre, &pst)
+	a := generator.NewStandardGenerator(pre, pst)
 	
 	http.HandleFunc("/", server.NewWebHandler(a))
 	log.Fatal(http.ListenAndServe(":8080", nil))

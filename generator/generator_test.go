@@ -1,16 +1,29 @@
 package generator
 
-import "testing"
+import (
+	"testing"
+)
 
-func TestGenerator(t *testing.T) {
+func TestGeneratorNames(t *testing.T) {
 
 	pre := []string{"Big", "Bad"}
 	pst := []string{"Beetle", "Borgs"}
 	
-	a := NewStandardGenerator(&pre, &pst)
+	generator := NewStandardGenerator(pre, pst)
+	names := map[string]int{}
 
-	if a.Next() != "BigBeetle" {
-		//t.Error("First term was not BigBeetle")
+	// generate 1000 names and ensure there are no dupes
+	
+	for i := 0; i < 1000; i += 1 {
+
+		name := generator.Next()
+		
+		if _, ok := names[name]; ok {
+			t.Errorf("Duplicate name was given.")
+		} else {
+			names[name] = 0;
+		}
+		
 	}
-
+	
 }

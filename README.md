@@ -8,8 +8,7 @@ are guaranteed unique. Useful for naming servers, databases, etc.
 This is a work in progress and is still missing key features for usability.
 
 Todo:
-    - [x] name generation
-    - [ ] definable input lists
-    - [ ] persistence
-    - [ ] config management integration
-    
+* -name generation-
+* definable input lists
+* persistence
+* config management integration

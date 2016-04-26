@@ -41,6 +41,7 @@ func main() {
 
 	log.Printf("Initialising data")
 
+	port := flag.String("p", "80", "port to serve names on")
 	prefile := flag.String("f1", "pre", "path to prefix words file")
 	postfile := flag.String("f2", "post", "path to prefix words file")
 
@@ -49,12 +50,12 @@ func main() {
 	pre := readWordList(*prefile)
 	pst := readWordList(*postfile)
 	
-	log.Printf("Starting server")
+	log.Printf("Starting server on port %s", *port)
 	
 	a := generator.NewStandardGenerator(pre, pst)
 	
 	http.HandleFunc("/", server.NewWebHandler(a))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+*port, nil))
 
 }
 

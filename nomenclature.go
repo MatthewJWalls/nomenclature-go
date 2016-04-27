@@ -4,39 +4,12 @@ import (
 	"os"
 	"log"
 	"flag"
-	"strings"
 	"net/http"
-	"io/ioutil"
-	
+
+	"github.com/MatthewJWalls/nomenclature/util"	
 	"github.com/MatthewJWalls/nomenclature/server"
 	"github.com/MatthewJWalls/nomenclature/generator"
 )
-
-// This is the naive approach for loading the word lists.
-// In the future we may want to deal with potentially large
-// lists which will need a bit of a rethink here so we're
-// only reading in the bytes we want.
-
-func readWordList(path string) ([]string) {
-
-	data, err := ioutil.ReadFile(path)
-
-	if err != nil {
-		log.Fatalf("Failed to read word list %q", path)
-	}
-
-	raw := strings.Split(string(data), "\n")
-	out := []string{}
-
-	for i := 0; i < len(raw); i++ {
-		if strings.TrimSpace(raw[i]) != "" {
-			out = append(out, strings.TrimSpace(raw[i]))
-		}
-	}
-
-	return out
-
-}
 
 func main() {
 
@@ -49,8 +22,8 @@ func main() {
 
 	log.Printf("Initialising data")
 	
-	pre := readWordList(*prefile)
-	pst := readWordList(*postfile)
+	pre := util.GetFileLines(*prefile)
+	pst := util.GetFileLines(*postfile)
 	
 	log.Printf("Starting server on port %s", *port)
 	

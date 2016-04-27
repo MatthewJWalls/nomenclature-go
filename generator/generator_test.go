@@ -2,6 +2,7 @@ package generator
 
 import (
 	"testing"
+	"os"
 )
 
 func TestGeneratorNames(t *testing.T) {
@@ -23,6 +24,8 @@ func TestGeneratorNames(t *testing.T) {
 		}
 		
 	}
+
+	os.Remove(".state")	
 	
 }
 
@@ -33,7 +36,7 @@ func TestGeneratorPersistence(t *testing.T) {
 	
 	generator := NewStandardGenerator(pre, pst, ".state")
 
-	out := generator.Save("ignore")
+	out := generator.Save(".ignore")
 
 	if out != "{\"Prefixes_n\":0,\"Step\":0,\"Depth\":1}" {
 		t.Errorf("Bad json")
@@ -45,7 +48,7 @@ func TestGeneratorPersistence(t *testing.T) {
 		t.Errorf("Generator state did not change")
 	}
 	
-	generator.Load("ignore")
+	generator.Load(".ignore")
 
 	if generator.State().Prefixes_n != 0 {
 		t.Errorf(
@@ -53,5 +56,8 @@ func TestGeneratorPersistence(t *testing.T) {
 			generator.State().Prefixes_n,
 		)
 	}
+
+	os.Remove(".ignore")
+	os.Remove(".state")
 
 }

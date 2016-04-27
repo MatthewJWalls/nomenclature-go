@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"log"
 	"flag"
 	"strings"
@@ -39,20 +40,28 @@ func readWordList(path string) ([]string) {
 
 func main() {
 
-	log.Printf("Initialising data")
-
 	port := flag.String("p", "80", "port to serve names on")
+	state := flag.String("s", ".state", "path to state file")
 	prefile := flag.String("f1", "pre", "path to prefix words file")
 	postfile := flag.String("f2", "post", "path to prefix words file")
 
 	flag.Parse()
+
+	log.Printf("Initialising data")
 	
 	pre := readWordList(*prefile)
 	pst := readWordList(*postfile)
 	
 	log.Printf("Starting server on port %s", *port)
 	
-	a := generator.NewStandardGenerator(pre, pst)
+	a := generator.NewStandardGenerator(pre, pst, *state)
+	
+	if _, err := os.Stat(*state); err == nil {
+		
+		log.Printf("Using state file %q", *state)
+		_ = a.Load(*state)
+		
+	}
 	
 	http.HandleFunc("/", server.NewWebHandler(a))
 	log.Fatal(http.ListenAndServe(":"+*port, nil))

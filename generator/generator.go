@@ -1,6 +1,9 @@
 package generator
 
-import "strconv"
+import (
+	"encoding/json"
+	"io/ioutil"
+)
 
 // The StandardGenerator takes two word lists and produces
 // names made by combining one (or more) items from the first
@@ -22,7 +25,24 @@ type StandardGenerator struct {
 	// how many prefixes do we need to generate
 	// to guarantee our name is unique?
 	depth int
+
+	// the path to the file where we're going to
+	// persist our state to, so we carry off from
+	// the same place next time
+	stateFile string
 }
+
+// This is used for persisting the state of the generator to
+// disk via json marshalling.
+
+type StandardGeneratorRepr struct {
+	Prefixes_n int
+	Step int
+	Depth int
+}
+
+// Next() implements the core algorithm for deciding the next
+// name to be given by the generator.
 
 func (this *StandardGenerator) Next() string {
 
@@ -55,17 +75,76 @@ func (this *StandardGenerator) Next() string {
 		this.prefixes_n = 0
 		this.depth += 1
 	}
+
+	this.Save(this.stateFile)	
 	
 	return prefix+postfix
 	
 }
 
-// For debugging info
-func (this *StandardGenerator) State() string {
-	return "prefixes_n: " + strconv.Itoa(this.prefixes_n)
+// restore generator state from disk
+
+func (this *StandardGenerator) Load(path string) string {
+
+	bytes, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		panic(err)
+	}
+	
+	repr := StandardGeneratorRepr{}
+
+	err = json.Unmarshal(bytes, &repr)
+
+	if err != nil {
+		panic("Failed to parse generator state")
+	}
+
+	this.prefixes_n = repr.Prefixes_n
+	this.step = repr.Step
+	this.depth = repr.Depth
+
+	return string(bytes)
+
 }
 
-func NewStandardGenerator(prefixes []string, postfixes []string) *StandardGenerator {
+// persist generator state to disk
+
+func (this *StandardGenerator) Save(path string) string {
+
+	repr := StandardGeneratorRepr{
+		this.prefixes_n,
+		this.step,
+		this.depth,
+	}
+
+	bytes, err := json.Marshal(repr)
+
+	if err != nil {
+		panic("Failed to persist generator from disk")
+	}
+
+	ioutil.WriteFile(path, bytes, 0644)
+
+	return string(bytes)
+		
+}
+
+// For debugging info
+
+func (this *StandardGenerator) State() StandardGeneratorRepr {
+
+	repr := StandardGeneratorRepr{
+		this.prefixes_n,
+		this.step,
+		this.depth,
+	}
+
+	return repr
+
+}
+
+func NewStandardGenerator(prefixes []string, postfixes []string, save string) *StandardGenerator {
 
 	return &StandardGenerator{
 		prefixes,
@@ -73,6 +152,7 @@ func NewStandardGenerator(prefixes []string, postfixes []string) *StandardGenera
 		0,
 		0,
 		1,
+		save,
 	}
 	
 }

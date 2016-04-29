@@ -36,7 +36,7 @@ func main() {
 		
 	}
 	
-	http.HandleFunc("/", server.NewWebHandler(a))
+	http.HandleFunc("/names", server.NewWebHandler(a))
 	log.Fatal(http.ListenAndServe(":"+*port, nil))
 
 }

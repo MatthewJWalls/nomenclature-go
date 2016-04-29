@@ -28,7 +28,7 @@ func NewWebHandler(gen Generator) (func(w http.ResponseWriter, r *http.Request))
 	go pumpGeneratorIntoChannel(gen, nameQueue)
 	
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, <- nameQueue )
+		fmt.Fprintf(w, "{ \"name\" : \"%s\" }",  <- nameQueue )
 	}
 
 }

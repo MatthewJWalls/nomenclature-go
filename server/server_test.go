@@ -35,7 +35,7 @@ func TestNewWebHandler(t *testing.T) {
 
 	body, _ := ioutil.ReadAll(result.Body)
 
-	if string(body) != "yup" {
+	if string(body) != "{ \"name\" : \"yup\" }" {
 		t.Errorf("Failed to serve correct generator value")
 	}
 	

@@ -21,13 +21,8 @@ After preparing the two files you can serve them with:
 
     nomenclature -f1 prefixes.txt -f2 postfixes.txt -p 80
 
+Nomenclature will then start serving names at /names on port 80.
+    
 Nomenclature will persist it's own state to ensure it doesn't serve duplicate names even
 after program exit. By default the state is written out to a file called .state in the
 current working directory. You can change this with the "-s <path>" flag.
-    
-Todo:
-    
-* ~~name generation~~
-* ~~definable input lists~~
-* ~~persistence~~
-* config management integration

@@ -3,7 +3,7 @@ Nomenclature-go
 ===============
 
 Nomenclature is a web service written in Go which generates human readable names that
-are guaranteed unique. The intended use-case is for naming things like servers, schemas,
+are **guaranteed** unique. The intended use-case is for naming things like servers, schemas,
 etc.
 
 This is a work in progress and is still missing key features for usability.
